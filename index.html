@@ -1,0 +1,13 @@
+---
+layout: base.njk
+title: Home
+---
+<div class="content">
+<h1>Home</h1>
+<p>Welcome to my personal site. For now I will be using this to mostly share some of my learnings, ideas, projects and things like that.</p>
+<br />
+<h2>All blogs</h2>
+{% for blog in collections.blog %}
+<a href="{{blog.url}}">{{ blog.data.title }}</a>
+{% endfor %}
+</div>

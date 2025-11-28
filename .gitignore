@@ -14,3 +14,5 @@ node_modules/
 # Logs or temporary files
 *.log
 *.tmp
+
+TODO.md
