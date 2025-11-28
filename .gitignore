@@ -1,0 +1,16 @@
+# Eleventy build output
+_site/
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Editor-specific files
+.vscode/
+.DS_Store
+
+# Logs or temporary files
+*.log
+*.tmp

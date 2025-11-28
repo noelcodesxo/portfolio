@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title }}{% else %}My Portfolio{% endif %}</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <p class="nav-logo">Noel</p>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+    <div class="container">
+        {{ content | safe }}
+    </div>
+    </main>
+</body>
+</html>
