@@ -7,42 +7,53 @@
     <link rel="stylesheet" href="/main.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">Noel Codes</a>
-            <button class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="/" class="nav-link">Home</a></li>
-                <li><a href="/about" class="nav-link">About</a></li>
-            </ul>
-        </div>
-    </nav>
+    <header>
+        <a href="/" class="nav-logo">Noel Codes</a>
+        <nav class="navbar">
+            <div class="nav-container">
+                <button class="hamburger" id="hamburger" aria-label="open navigation menu" title="open navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
     <main>
     <div class="container">
         {{ content | safe }}
     </div>
     </main>
 
-    <script>
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
+        <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
 
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
+        function updateHamburgerLabel(isOpen) {
+            const label = isOpen ? 'close navigation menu' : 'open navigation menu';
+            hamburger.setAttribute('aria-label', label);
+            hamburger.setAttribute('title', label);
+        }
 
-    // Close menu when a link is clicked
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
+        hamburger.addEventListener('click', () => {
+            const isOpen = !hamburger.classList.contains('active');
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            updateHamburgerLabel(isOpen);
         });
-    });
-    </script>
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                updateHamburgerLabel(false);
+            });
+        });
+        </script>
 </body>
 </html>
