@@ -1,5 +1,6 @@
 export default function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("main.css");
+    eleventyConfig.addPassthroughCopy("track.js");
 
     eleventyConfig.addCollection("blog", function (collectionApi) {
         return collectionApi.getFilteredByTag("blog").sort((a, b) => {
