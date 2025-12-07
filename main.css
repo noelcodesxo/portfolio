@@ -50,12 +50,6 @@ header {
     align-items: center;
 }
 
-.nav-menu {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-
 .nav-logo {
     font-weight: 800;
     color: var(--primary);
@@ -143,12 +137,14 @@ header {
     .hamburger {
         display: none;
     }
-
+    
     .nav-menu {
         display: flex !important;
         flex-direction: row;
         position: static;
         background-color: transparent;
+        height: auto;
+        width:auto;
         border: none;
         gap: 2rem;
         padding: 0;
@@ -173,6 +169,7 @@ header {
 
 /* Medium devices (768px) - Increase spacing */
 @media (min-width: 768px) {
+
     .nav-logo {
         font-size: 1.75rem;
     }
@@ -184,10 +181,6 @@ header {
 
 /* Large devices (1024px+) - Optimal desktop experience */
 @media (min-width: 1024px) {
-    .nav-menu {
-        gap: 3rem;
-    }
-
     .nav-link {
         font-size: 1.1rem;
     }
