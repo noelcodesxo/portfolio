@@ -9,18 +9,16 @@
 <body>
     <header>
         <a href="/" class="nav-logo">Noel Codes</a>
-        <nav class="navbar">
-            <div class="nav-container">
-                <button class="hamburger" id="hamburger" aria-label="open navigation menu" title="open navigation menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <ul class="nav-menu" id="nav-menu">
-                    <li><a href="/" class="nav-link">Home</a></li>
-                    <li><a href="/about" class="nav-link">About</a></li>
-                </ul>
-            </div>
+        <nav class="navbar" id="nav">
+            <button class="hamburger" id="hamburger" aria-label="open navigation menu" title="open navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/about" class="nav-link">About</a></li>
+            </ul>
         </nav>
     </header>
     <main>
@@ -32,6 +30,7 @@
         <script>
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('nav-menu');
+        const nav = document.getElementById('nav');
 
         function updateHamburgerLabel(isOpen) {
             const label = isOpen ? 'close navigation menu' : 'open navigation menu';
@@ -39,7 +38,7 @@
             hamburger.setAttribute('title', label);
         }
 
-        hamburger.addEventListener('click', () => {
+        nav.addEventListener('click', () => {
             const isOpen = !hamburger.classList.contains('active');
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
