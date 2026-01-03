@@ -42,11 +42,11 @@
     --border-light: #d4d4d8;
     --heading: #09090b;
     --accent-orange: #ff8c00;
-    --accent-blue: #2563eb;
-    --link: #2563eb;
-    --link-hover: #1d4ed8;
-    --button-primary-bg: #2563eb;
-    --button-primary-hover: #1d4ed8;
+    --accent-blue: #1d4ed8;
+    --link: #1d4ed8;
+    --link-hover: #1e40af;
+    --button-primary-bg: #1d4ed8;
+    --button-primary-hover: #1e40af;
     --button-secondary-bg: #f4f4f5;
     --button-secondary-hover: #e4e4e7;
   }
