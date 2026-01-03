@@ -5,19 +5,26 @@
 }
 
 :root {
-  /* Updated color palette extracted from portfolio.tsx */
+  /* Modern dark theme - inspired by professional portfolios */
   --primary: #ffffff;
   --primary-dark: #e5e5e5;
-  --text: #d4d4d4;
-  --text-light: #9ca3af;
-  --text-lighter: #6b7280;
+  --text: #a1a1aa;
+  --text-light: #71717a;
+  --text-lighter: #52525b;
   --bg: #0a0a0a;
-  --bg-light: #1f2937;
-  --border: #374151;
-  --border-light: #4b5563;
+  --bg-light: #18181b;
+  --bg-elevated: #27272a;
+  --border: #27272a;
+  --border-light: #3f3f46;
   --heading: #ffffff;
-  --accent-gray: #1f2937;
-  --link: #ff8c00;
+  --accent-orange: #ff8c00;
+  --accent-blue: #3b82f6;
+  --link: #60a5fa;
+  --link-hover: #3b82f6;
+  --button-primary-bg: #3b82f6;
+  --button-primary-hover: #2563eb;
+  --button-secondary-bg: #27272a;
+  --button-secondary-hover: #3f3f46;
 }
 
 
@@ -83,7 +90,7 @@ header {
 
 .hamburger span {
     height: 2px;
-    background-color: #e5e5e5;
+    background-color: var(--primary-dark);
     border-radius: 2px;
     transition: all 0.3s ease;
     z-index: 11;
@@ -119,21 +126,19 @@ header {
     gap: 0.4rem;
     flex-direction: column;
     padding: 5rem 0;
-    top: -1rem;
+    top: -1.5rem;
     height: 100vh;
     width: 85vw;
-    right: -1rem;
+    right: -1.5rem;
 }
 
 .nav-menu.active {
     display: flex;
     position: absolute;
-    background-color: var(--bg);
-    background-image: linear-gradient(rgba(180,180,180,0.08), rgba(180,180,180,0.08));
-    background-blend-mode: lighten;
-    border-left: 1px solid var(--bg-light);
+    background-color: var(--bg-elevated);
+    border-left: 1px solid var(--border);
     z-index: 1;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
 .nav-link {
@@ -148,8 +153,8 @@ header {
 }
 
 .nav-link:hover {
-    opacity: 0.8;
-    border-left-color: var(--primary);
+    color: var(--link-hover);
+    border-left-color: var(--accent-blue);
 }
 
 /* Tablet breakpoint (640px) - Show menu horizontally */
@@ -179,7 +184,8 @@ header {
 
     .nav-link:hover {
         border-left-color: transparent;
-        border-bottom-color: var(--link);
+        border-bottom-color: var(--accent-blue);
+        color: var(--link-hover);
     }
 
     .nav-logo {
@@ -274,16 +280,17 @@ header {
     font-size: 1.25rem;
     font-weight: 700;
     margin: 1.75rem 0 0.75rem 0;
-    color: #f0f0f0;
+    color: var(--primary-dark);
 }
 
 .content a {
     color: var(--link);
     text-decoration: underline;
+    transition: color 0.2s ease;
 }
 
 .content a:hover {
-    opacity: 0.8;
+    color: var(--link-hover);
 }
 
 /* Tablet breakpoint (640px) - Increase padding and font sizes slightly */
