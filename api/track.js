@@ -6,6 +6,6 @@ export default async function handler(req, res) {
         timestamp: new Date().toISOString(),
     };
 
-    console.log(JSON.stringify(data)); // Just loging this to my consol4 to sort of track visitors <3.
+    console.log(JSON.stringify(data)); // Just loging this to my console to sort of track visitors <3.
     res.status(204).end();
 }
