@@ -229,31 +229,31 @@ header {
 .container {
     max-width: 700px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem 1.5rem;
 }
 
 .content {
     font-size: 1rem;
-    line-height: 1.4;
+    line-height: 1.6;
 }
 
 .content p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .content ol {
     margin-left: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .content li {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
     padding-left: 0.5rem;
 }
 
 .content ul {
     margin-left: 2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .content ul li {
@@ -264,23 +264,29 @@ header {
 .content h1 {
     font-size: 2rem;
     font-weight: 800;
-    margin: 2.5rem 0 1rem 0;
+    margin: 0 0 1rem 0;
     color: var(--heading);
-    line-height: 1.3;
+    line-height: 1.2;
+}
+
+.content h1:not(:first-child) {
+    margin-top: 3rem;
 }
 
 .content h2 {
     font-size: 1.5rem;
     font-weight: 700;
-    margin: 2rem 0 1rem 0;
+    margin: 2.5rem 0 1rem 0;
     color: var(--heading);
+    line-height: 1.3;
 }
 
 .content h3 {
     font-size: 1.25rem;
     font-weight: 700;
-    margin: 1.75rem 0 0.75rem 0;
+    margin: 2rem 0 0.75rem 0;
     color: var(--primary-dark);
+    line-height: 1.4;
 }
 
 .content a {
@@ -293,11 +299,23 @@ header {
     color: var(--link-hover);
 }
 
+/* Blog link list - compact spacing */
+.content h2 + p {
+    margin-bottom: 0.5rem;
+}
+
+.content p:has(a[href*="/blogs/"]) {
+    margin-bottom: 0.5rem;
+}
+
 /* Tablet breakpoint (640px) - Increase padding and font sizes slightly */
 @media (min-width: 640px) {
-    body {
-        padding: 1.5rem;
-        font-size: 1.05rem;
+    .container {
+        padding: 1.5rem 2rem;
+    }
+
+    .content {
+        font-size: 1.0625rem;
     }
 
     .content h1 {
@@ -315,9 +333,12 @@ header {
 
 /* Medium devices (768px) - Further optimize for tablets */
 @media (min-width: 768px) {
-    body {
-        padding: 2rem 1.5rem;
-        font-size: 1.1rem;
+    .container {
+        padding: 2rem 2.5rem;
+    }
+
+    .content {
+        font-size: 1.0625rem;
     }
 
     .content h1 {
@@ -326,7 +347,7 @@ header {
 
     .content h2 {
         font-size: 1.875rem;
-        margin: 2.5rem 0 1.25rem 0;
+        margin: 3rem 0 1.25rem 0;
     }
 
     .content h3 {
@@ -336,13 +357,13 @@ header {
 
 /* Large devices (1024px) - Optimize for laptops */
 @media (min-width: 1024px) {
-    body {
-        padding: 2rem;
-        font-size: 1.125rem;
-    }
-
     .container {
         max-width: 700px;
+        padding: 2rem 3rem;
+    }
+
+    .content {
+        font-size: 1.0625rem;
     }
 
     .content h1 {
@@ -360,17 +381,13 @@ header {
 
 /* Extra large devices (1440px+) - Optimal experience on big screens */
 @media (min-width: 1440px) {
-    body {
-        padding: 3rem 2rem;
-        font-size: 1.115rem;
-    }
-
     .container {
         max-width: 740px;
+        padding: 2.5rem 3rem;
     }
 
-    .content p {
-      font-size: 1.15rem;
+    .content {
+        font-size: 1.125rem;
     }
 
     .content h1 {
@@ -378,7 +395,7 @@ header {
     }
 
     .content h2 {
-        font-size: 2rem;
+        font-size: 2.125rem;
     }
 
     .content h3 {
