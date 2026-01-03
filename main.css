@@ -5,7 +5,7 @@
 }
 
 :root {
-  /* Modern dark theme - inspired by professional portfolios */
+  /* Modern dark theme - default */
   --primary: #ffffff;
   --primary-dark: #e5e5e5;
   --text: #a1a1aa;
@@ -25,6 +25,31 @@
   --button-primary-hover: #2563eb;
   --button-secondary-bg: #27272a;
   --button-secondary-hover: #3f3f46;
+}
+
+/* Light theme - auto-switches based on system preference */
+@media (prefers-color-scheme: light) {
+  :root {
+    --primary: #18181b;
+    --primary-dark: #27272a;
+    --text: #52525b;
+    --text-light: #71717a;
+    --text-lighter: #a1a1aa;
+    --bg: #ffffff;
+    --bg-light: #fafafa;
+    --bg-elevated: #f4f4f5;
+    --border: #e4e4e7;
+    --border-light: #d4d4d8;
+    --heading: #09090b;
+    --accent-orange: #ff8c00;
+    --accent-blue: #2563eb;
+    --link: #2563eb;
+    --link-hover: #1d4ed8;
+    --button-primary-bg: #2563eb;
+    --button-primary-hover: #1d4ed8;
+    --button-secondary-bg: #f4f4f5;
+    --button-secondary-hover: #e4e4e7;
+  }
 }
 
 
