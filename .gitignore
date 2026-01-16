@@ -15,6 +15,9 @@ node_modules/
 *.log
 *.tmp
 
+# Others
+.playwright-mcp
+
 TODO.md
 CLAUDE.md
 NOTES.md
