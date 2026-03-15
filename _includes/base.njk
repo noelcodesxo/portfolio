@@ -19,18 +19,20 @@
     <link rel="canonical" href="{{ site.url }}{{ page.url }}">
 
     {# Open Graph (Facebook, LinkedIn, etc.) #}
+    {% block meta %}
     <meta property="og:title" content="{{ pageTitle }}">
     <meta property="og:description" content="{{ pageDescription }}">
-    <meta property="og:type" content="{% if tags and 'blog' in tags %}article{% else %}website{% endif %}">
+    <meta property="og:type" content="website">
     <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-    <meta property="og:image" content="{{ site.url }}{{ image if image else site.image }}">
+    <meta property="og:image" content="{{ site.url }}{{ site.image }}">
     <meta property="og:site_name" content="{{ site.name }}">
 
     {# Twitter Card #}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ pageTitle }}">
     <meta name="twitter:description" content="{{ pageDescription }}">
-    <meta name="twitter:image" content="{{ site.url }}{{ image if image else site.image }}">
+    <meta name="twitter:image" content="{{ site.url }}{{ site.image }}">
+    {% endblock %}
 
     {# Theme color for mobile browsers #}
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -38,8 +40,10 @@
 
     {# Favicon #}
     <link rel="icon" href="/images/favicon.ico" sizes="any">
-    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,7 +83,7 @@
     </header>
     <main>
     <div class="container">
-        {{ content | safe }}
+        {% block content %}{{ content | safe }}{% endblock %}
     </div>
     </main>
 
@@ -116,6 +120,36 @@
 
         <script>
             fetch("/api/track").catch(() => {});
+        </script>
+
+        <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+            <img id="lightbox-img" src="" alt="">
+        </div>
+
+        <script>
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+
+            document.querySelectorAll('.content img').forEach(img => {
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightbox.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            lightbox.addEventListener('click', () => {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    lightbox.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            });
         </script>
 </body>
 </html>

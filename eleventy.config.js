@@ -1,6 +1,11 @@
 export default function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("main.css");
     eleventyConfig.addPassthroughCopy("images");
+    eleventyConfig.addPassthroughCopy("site.webmanifest");
+
+    eleventyConfig.addFilter("isoDate", (date) => {
+        return new Date(date).toISOString();
+    });
 
     eleventyConfig.addCollection("blog", function (collectionApi) {
         return collectionApi.getFilteredByTag("blog").sort((a, b) => {
