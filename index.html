@@ -7,8 +7,9 @@ description: Personal site of Noel Codes — sharing learnings, ideas, and proje
 <h1>Home</h1>
 <p>Hello, I'm Noel Covarrubias, a Software Engineer who goes by Noel Codes online. I started writing a couple months ago when working which I realized helped me think clearer. Then I started writing for personal reasons and I liked it. Now I'm starting to write in public. I made this portfolio to share what I write, it's a mix of just whatever I'm feeling at the moment, my learnings, ideas, and projects.</p>
 <br />
-<h2>All blogs</h2>
-{% for blog in collections.blog %}
+<h2>Recent blogs</h2>
+{% for blog in collections.blog | limit(5) %}
 <p><a href="{{blog.url}}">{{ blog.data.title }}</a></p>
 {% endfor %}
+<p><a href="/blogs">See all blogs →</a></p>
 </div>

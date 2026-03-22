@@ -3,6 +3,9 @@ title: My game plan for landing my next role
 description: My structured approach to job searching — how I'm thinking about targeting roles, preparing for interviews, and staying consistent.
 layout: blog.njk
 tags: blog
+topics:
+  - career
+  - job-search
 ---
 
 # My game plan for landing my next role

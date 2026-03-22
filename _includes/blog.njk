@@ -11,7 +11,7 @@
     <meta property="article:author" content="{{ site.author }}">
     <meta property="article:published_time" content="{{ page.date | isoDate }}">
     {% for tag in tags %}
-        {% if tag != "blog" %}
+        {% if tag != "blog" and tag != "weekly" %}
     <meta property="article:tag" content="{{ tag }}">
         {% endif %}
     {% endfor %}

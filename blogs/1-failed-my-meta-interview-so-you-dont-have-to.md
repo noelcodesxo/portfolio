@@ -3,6 +3,9 @@ title: I failed my Meta interview, so you don't have to!
 description: I didn't pass my Meta interview — here's what I learned about the difference between practicing LeetCode and practicing for an actual interview.
 layout: blog.njk
 tags: blog
+topics:
+  - career
+  - interviews
 ---
 
 # I failed my Meta interview so you don't have to

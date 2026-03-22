@@ -1,0 +1,44 @@
+---
+layout: base.njk
+title: Blogs
+description: Writing by Noel Covarrubias — blogs on engineering, career, and life, plus weekly reads.
+---
+<div class="content">
+    <h1>Blogs</h1>
+    <p>I write about engineering, career, and whatever else is on my mind.</p>
+
+    <div class="post-list">
+        {% for post in collections.blog %}
+        <article class="post-item">
+            <a href="{{ post.url }}" class="post-item-link">
+                <span class="post-item-title">{{ post.data.title }}</span>
+                {% if post.data.description %}
+                <span class="post-item-desc">{{ post.data.description }}</span>
+                {% endif %}
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+
+    <div class="weekly-section">
+        <h2>Weekly Reads</h2>
+        <p class="section-desc">5 hours of reading a week, distilled.</p>
+
+        {% if collections.weekly.length > 0 %}
+        <ul class="weekly-list">
+            {% for post in collections.weekly | limit(4) %}
+            <li class="weekly-item">
+                <a href="{{ post.url }}" class="weekly-link">{{ post.data.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        {% if collections.weekly.length > 4 %}
+        <a href="/weekly" class="see-all-link">See all weekly reads →</a>
+        {% endif %}
+
+        {% else %}
+        <p class="empty-state">First weekly read coming soon.</p>
+        {% endif %}
+    </div>
+</div>

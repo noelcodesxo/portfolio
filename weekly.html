@@ -1,0 +1,21 @@
+---
+layout: base.njk
+title: Weekly Reads
+description: A weekly digest of articles Noel has been reading — highlights and thoughts.
+---
+<div class="content">
+    <h1>Weekly Reads</h1>
+    <p>Every week I spend about 5 hours reading articles, papers, and posts. This is where I share the highlights — what I found interesting and my thoughts on it.</p>
+
+    {% if collections.weekly.length > 0 %}
+    <ul class="weekly-list weekly-list--full">
+        {% for post in collections.weekly %}
+        <li class="weekly-item">
+            <a href="{{ post.url }}" class="weekly-link">{{ post.data.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">First weekly read coming soon.</p>
+    {% endif %}
+</div>

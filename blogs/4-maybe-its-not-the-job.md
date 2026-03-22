@@ -3,6 +3,9 @@ title: Maybe it's not the job
 description: Sometimes the burnout, the frustration, the restlessness — maybe it's not the job. Maybe it's something deeper worth examining.
 layout: blog.njk
 tags: blog
+topics:
+  - career
+  - personal
 ---
 
 # Maybe it's not the job

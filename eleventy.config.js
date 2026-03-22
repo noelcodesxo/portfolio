@@ -7,12 +7,21 @@ export default function (eleventyConfig) {
         return new Date(date).toISOString();
     });
 
+    eleventyConfig.addFilter("limit", (array, n) => array.slice(0, n));
+
     eleventyConfig.addCollection("blog", function (collectionApi) {
         return collectionApi.getFilteredByTag("blog").sort((a, b) => {
-            // Extract leading numbers and compare
             const getNum = (item) =>
                 parseInt(item.fileSlug.match(/^\d+/)?.[0] || 0, 10);
-            return getNum(b) - getNum(a); // Descending order (newest first)
+            return getNum(b) - getNum(a);
+        });
+    });
+
+    eleventyConfig.addCollection("weekly", function (collectionApi) {
+        return collectionApi.getFilteredByTag("weekly").sort((a, b) => {
+            const getNum = (item) =>
+                parseInt(item.fileSlug.match(/^\d+/)?.[0] || 0, 10);
+            return getNum(b) - getNum(a);
         });
     });
 }

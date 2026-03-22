@@ -3,6 +3,10 @@ title: The world I want to live in
 description: A reflection on the kind of world I want to help build — through the work I do and the values I carry.
 layout: blog.njk
 tags: blog
+topics:
+  - personal
+  - space
+  - reflections
 ---
 
 # The world I want to live in
