@@ -1,0 +1,54 @@
+---
+title: The world I want to live in
+description: A reflection on the kind of world I want to help build — through the work I do and the values I carry.
+layout: blog.njk
+tags: blog
+---
+
+# The world I want to live in
+
+## Intro
+
+I recently heard this [podcast](https://open.spotify.com/episode/114ouJJwV0jALj1prhfCpI?si=2F015i3hTNaQH-xzJI3-0w&nd=1&dlsi=ee1cdb70b4a840ad) from Lenny's Podcast where he interviews Melanie Perkins (co-founder of Canva). I honestly liked it, but I didn't take many notes or study it as much as I usually do when I like a podcast.
+
+Either way, Melanie talks about how she has a futuristic view of the world — like 10–20 years into the future — where she thinks about how she would like the world to be, and then bases her short-term decisions around that vision.
+
+## The world I want to live in
+
+Ever since I was little, I've always been in love with technology: computers, cellphones, drones, robots, AI. And space: humanity being able to travel through space, being among the stars, looking at Earth from above, seeing stars in other galaxies.
+
+I wonder… will I get to see that? Will we ever achieve that? When?
+
+If I could give everything I have — my life, my family, my money, everything — just to go to sleep now and wake up in that future, I would do it in a second.
+
+Maybe it sounds crazy, but I think that future is actually exciting. Think about it: it's a world where you can achieve anything you want. A lot of governments have already failed because people realized it's supposed to be "of the people, for the people." Technology is more open than it's ever been — and yes, that makes it more dangerous too — but people are more tech-savvy. If you understand technology, you know what to do and what not to do.
+
+You have access to an open market. If you have something valuable that someone wants, you can trade it. You can build a robot for yourself cheaply, or just buy one. You can go to space through commercial flights, or even build your own spaceship and go yourself. Each world is free and open for exploration. The whole universe is ours. Humanity exists across many worlds, and we keep discovering new ones over time.
+
+If you want to have a family and live a normal life, you can — very much like living in the US in 2025. But if you want to be a space traveler, restart your life, explore space, the oceans of Earth, or other planets, you can do that. Humans decided to go back to being explorers, inventors, and hunters again.
+
+## Back to reality, and what can I do to get us there?
+
+It is December 2025. I've grown so much in just a few years. From my mid-20s to now, it has mostly been growth. I achieved some goals, but some of them started fading away.
+
+Now that I have money… is that what I wanted? I think what I really wanted was freedom — the freedom to do whatever I want. I feel like I have no time outside of work to build what I want, to focus on finding a job I like more, that excites me, and aligns with the future I dream of.
+
+So… what can I do?
+
+I'm a software engineer with 3 years of experience, mostly working on backend cloud-based systems. Humanity can already travel to orbit without much trouble, even non-astronauts. We can go to the International Space Station, and companies like [StarCloud](https://www.starcloud.com/) are trying to build data centers in space. There's a lot of robotics happening because AI systems are being used to train them much faster than before.
+
+I don't even know what problems we still have to solve to get us there. Maybe that's where I should start. I could learn more history, keep up with space-related work, and understand what companies are actually struggling with.
+
+I just want to be there — among the people working on that future.
+
+## Outro
+
+There's a lot I need to figure out. How do I even get started? How do you break down something you don't fully understand?
+
+I was born in the US, but I grew up in Mexico because my parents moved there. No one in my family was "someone big." I grew up mostly playing video games and not doing much else. I think I came across one of those "Don't be like everyone else — read, study, work out" messages when I was around 19 or 20. Slowly, I started changing my life.
+
+I don't think I learned about academia until I was like 26 or 27. If I had known what I know now when I was a kid, I would've looked for programs in computer science or robotics in Mexico. When I moved to the US at 17, I could've focused more on learning English and studying, I could've actually graduated college, not to get the dumb certificate that you don't even need for a job, but to meet people who wanted what I want, and maybe I'd already be working alongside people with the same goals.
+
+But the past can't be changed. Slowly but surely, I'll turn my life around again.
+
+I want to be among the stars. I want humanity to become multi-planetary. And I want to see the world I dream of before I die.
