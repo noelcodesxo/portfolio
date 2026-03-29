@@ -123,6 +123,13 @@
             fetch("/api/track").catch(() => {});
         </script>
 
+        <script>
+            document.querySelectorAll('a[href^="http"]').forEach(a => {
+                a.setAttribute('target', '_blank');
+                a.setAttribute('rel', 'noopener');
+            });
+        </script>
+
         <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
             <img id="lightbox-img" src="" alt="">
         </div>
