@@ -19,9 +19,12 @@ export default function (eleventyConfig) {
 
     eleventyConfig.addCollection("weekly", function (collectionApi) {
         return collectionApi.getFilteredByTag("weekly").sort((a, b) => {
-            const getNum = (item) =>
-                parseInt(item.fileSlug.match(/^\d+/)?.[0] || 0, 10);
-            return getNum(b) - getNum(a);
+            const getDate = (item) => {
+                const match = item.fileSlug.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+                if (!match) return 0;
+                return new Date(`${match[3]}-${match[1]}-${match[2]}`);
+            };
+            return getDate(b) - getDate(a);
         });
     });
 }
