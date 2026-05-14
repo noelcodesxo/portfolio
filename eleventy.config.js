@@ -9,6 +9,13 @@ export default function (eleventyConfig) {
 
     eleventyConfig.addFilter("limit", (array, n) => array.slice(0, n));
 
+    eleventyConfig.addFilter("readTime", (content) => {
+        if (!content) return "1 min read";
+        const words = content.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+        const minutes = Math.max(1, Math.round(words / 200));
+        return `${minutes} min read`;
+    });
+
     const byFileNum = (a, b) => {
         const getNum = (item) => parseInt(item.fileSlug.match(/^\d+/)?.[0] || 0, 10);
         return getNum(b) - getNum(a);

@@ -11,7 +11,10 @@ description: Writing by Noel Covarrubias — blogs on engineering, career, and l
         {% for post in collections.blog %}
         <article class="post-item">
             <a href="{{ post.url }}" class="post-item-link">
-                <span class="post-item-title">{{ post.data.title }}</span>
+                <div class="post-item-header">
+                    <span class="post-item-title">{{ post.data.title }}</span>
+                    <span class="post-item-read-time">{{ post.templateContent | readTime }}</span>
+                </div>
                 {% if post.data.description %}
                 <span class="post-item-desc">{{ post.data.description }}</span>
                 {% endif %}
