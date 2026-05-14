@@ -9,12 +9,21 @@ export default function (eleventyConfig) {
 
     eleventyConfig.addFilter("limit", (array, n) => array.slice(0, n));
 
+    const byFileNum = (a, b) => {
+        const getNum = (item) => parseInt(item.fileSlug.match(/^\d+/)?.[0] || 0, 10);
+        return getNum(b) - getNum(a);
+    };
+
     eleventyConfig.addCollection("blog", function (collectionApi) {
-        return collectionApi.getFilteredByTag("blog").sort((a, b) => {
-            const getNum = (item) =>
-                parseInt(item.fileSlug.match(/^\d+/)?.[0] || 0, 10);
-            return getNum(b) - getNum(a);
-        });
+        return collectionApi.getFilteredByTag("blog")
+            .filter(item => !item.data.isFeedback)
+            .sort(byFileNum);
+    });
+
+    eleventyConfig.addCollection("feedback", function (collectionApi) {
+        return collectionApi.getFilteredByTag("blog")
+            .filter(item => item.data.isFeedback)
+            .sort(byFileNum);
     });
 
     eleventyConfig.addCollection("weekly", function (collectionApi) {

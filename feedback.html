@@ -1,0 +1,347 @@
+---
+layout: base.njk
+title: Feedback
+description: A handful of pieces I'd love your honest eyes on.
+---
+
+<style>
+/* ─────────────────────────────────────────────────────────────────────────────
+   FEEDBACK PAGE — Warm, personal extension of the portfolio theme
+   Adds amber warmth + Caveat handwriting alongside the existing design system
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+
+:root {
+  --amber: #f59e0b;
+  --amber-hover: #d97706;
+  --amber-soft: rgba(245, 158, 11, 0.10);
+  --amber-border: rgba(245, 158, 11, 0.22);
+  --amber-glow: rgba(245, 158, 11, 0.06);
+}
+
+/* ── Shared section spacing ───────────────────────────────────────────────── */
+
+.fb-page {
+  padding-top: 0.25rem;
+}
+
+/* ── Hero: personal intro ─────────────────────────────────────────────────── */
+
+.fb-hero {
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  animation: fbFadeUp 0.45s ease-out both;
+}
+
+.fb-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem !important;
+}
+
+.fb-eyebrow::before {
+  content: '✦';
+  font-size: 0.65rem;
+}
+
+.fb-headline {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.8rem, 5.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--heading);
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  margin-bottom: 1.5rem !important;
+}
+
+/* the handwritten personal note */
+.fb-letter {
+  font-family: 'Kalam', cursive;
+  font-size: 1.25rem;
+  color: var(--text);
+  line-height: 1.7;
+  max-width: 500px;
+  position: relative;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--border);
+}
+
+.fb-letter strong {
+  color: var(--primary-muted);
+  font-weight: 700;
+}
+
+.fb-letter em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.fb-sig {
+  display: block;
+  margin-top: 0.85rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+/* ── Section header ───────────────────────────────────────────────────────── */
+
+/* ── Article cards ────────────────────────────────────────────────────────── */
+
+.fb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 3.5rem;
+}
+
+.fb-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--bg-subtle);
+  position: relative;
+  transition: border-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+/* gradient top bar — amber to teal, hidden until hover */
+.fb-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--amber) 0%, var(--accent) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* warm glow behind the card on hover */
+.fb-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: var(--amber-glow);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.fb-card:hover {
+  border-color: var(--amber-border);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.05), 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.fb-card:hover::before,
+.fb-card:hover::after {
+  opacity: 1;
+}
+
+/* whole-card link sits above the ::after overlay */
+.fb-card-link {
+  display: block;
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fb-card-title {
+  display: block;
+  font-family: 'Sora', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--heading);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-bottom: 0.55rem;
+  transition: color 0.2s ease;
+}
+
+.fb-card-link:hover .fb-card-title {
+  color: var(--accent);
+}
+
+.fb-card-desc {
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.65;
+  margin-bottom: 1rem !important;
+}
+
+/* "what I'm wondering" block */
+.fb-focus {
+  background: var(--bg-elevated);
+  border-left: 2px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  padding: 0.6rem 0.85rem;
+  margin: 0 !important;
+}
+
+.fb-focus-label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.fb-focus p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.55;
+  margin: 0 !important;
+  font-style: italic;
+}
+
+/* ── Thank-you footer ─────────────────────────────────────────────────────── */
+
+.fb-thanks {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem 1.75rem;
+  background: var(--bg-subtle);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle diagonal pattern for texture */
+.fb-thanks::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 24px,
+    rgba(245, 158, 11, 0.03) 24px,
+    rgba(245, 158, 11, 0.03) 25px
+  );
+  pointer-events: none;
+}
+
+.fb-thanks > * {
+  position: relative;
+  z-index: 1;
+}
+
+.fb-thanks-text {
+  font-family: 'Kalam', cursive;
+  font-size: 1.35rem;
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0 !important;
+  max-width: 400px;
+  margin-inline: auto !important;
+}
+
+.fb-thanks-text strong {
+  color: var(--primary-muted);
+  font-weight: 700;
+}
+
+.fb-thanks-text em {
+  color: var(--amber);
+  font-style: normal;
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────────── */
+
+.fb-empty {
+  font-size: 0.9rem;
+  color: var(--text-lighter);
+  font-style: italic;
+  margin-bottom: 3.5rem !important;
+}
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+
+@keyframes fbFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fbPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.15); }
+}
+
+.fb-list {
+  animation: fbFadeUp 0.5s ease-out 0.1s both;
+}
+
+.fb-thanks {
+  animation: fbFadeUp 0.5s ease-out 0.2s both;
+}
+
+/* ── Responsive tweaks ────────────────────────────────────────────────────── */
+
+@media (min-width: 640px) {
+  .fb-letter {
+    font-size: 1.3rem;
+  }
+
+  .fb-card {
+    padding: 1.6rem 1.75rem;
+  }
+
+  .fb-thanks {
+    padding: 2.25rem 2.5rem;
+  }
+}
+</style>
+
+<div class="fb-page">
+
+  <div class="fb-hero">
+    <p class="fb-eyebrow">for your eyes</p>
+    <h1 class="fb-headline">Could I get your honest read?</h1>
+    <p class="fb-letter">
+      First of all, thank you! I'm looking for a real take from someone whose perspective matters to me.
+      <span class="fb-sig">— Noel</span>
+    </p>
+  </div>
+
+  {% if collections.feedback.length > 0 %}
+  <div class="fb-list">
+    {% for post in collections.feedback %}
+    <article class="fb-card">
+      <a href="{{ post.url }}" class="fb-card-link">
+        <span class="fb-card-title">{{ post.data.title }}</span>
+        {% if post.data.description %}
+        <p class="fb-card-desc">{{ post.data.description }}</p>
+        {% endif %}
+        {% if post.data.feedbackThoughts %}
+        <div class="fb-focus">
+          <span class="fb-focus-label">what i'm wondering</span>
+          <p>{{ post.data.feedbackThoughts }}</p>
+        </div>
+        {% endif %}
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="fb-empty">Nothing here yet — check back soon.</p>
+  {% endif %}
+
+  <div class="fb-thanks">
+    <p class="fb-thanks-text">
+      Seriously — thank you for taking time out of your day. Means a lot to me.
+    </p>
+  </div>
+
+</div>
