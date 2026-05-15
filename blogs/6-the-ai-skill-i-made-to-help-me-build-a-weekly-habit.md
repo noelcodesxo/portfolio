@@ -1,22 +1,22 @@
 ---
-title: The AI Skill I Made to Help Me Build a Weekly Habit
+title: How I Built My Own AI Reading Assistant (and Kept Making It Smarter)
 description: I was feeling stressed about AI and the tech industry moving so fast, so I made an AI skill that could help me read and learn things fast to not fall behind.
 layout: blog.njk
 tags: blog
 topics:
   - ai
   - claude
-isFeedback: true
+isFeedback: false
 feedbackThoughts: Does the blog read well? Can you tell me who you think the target audience is based off it?
 ---
 
-# The AI Skill I Made to Help Me Build a Weekly Habit
+# How I Built My Own AI Reading Assistant (and Kept Making It Smarter)
 
 Back in December of last year, I found myself stressing out every week. This was due to how fast the tech industry was moving because of AI. I started noticing that my friends (who all work for different companies) were talking about things I hadn't heard of before: slash commands, Lovable, V0, tons of different AI models, and all the new stuff coming out every week. I already used AI at work, but only what my company gives us access to, which is not everything — unlike at companies where you can use almost anything you want. 
 
 So, I decided to create a new habit: read 2–4 hours every Sunday, anything I could find that's interesting and related to the tech industry. Sometimes it's AI (like reading the release notes of the new VS Code version to see changes for GitHub Copilot, or Anthropic docs to learn about how to use Claude Code — which is my favorite to use); other times it's blogs on how to grow your career, postmortems, etc. The point was to do it every Sunday at the exact same time — a new habit that would help me learn and not fall behind in tech.
 
-## What the AI Skill Does
+## I Made an AI Reading Assistant (AI Skill)
 
 The first two weeks, the system looked like this (no AI skill yet):
 
@@ -167,6 +167,6 @@ It's so cool to look back a few months and see how far it's come. I've learned n
 
 ![PreToolUse Hook example for Claude Code](/images/6/pretooluse-hook.png)
 
-This is what I love about AI — the things you can do with it that are deeply personal. I grew up watching sci-fi movies, and what I one day want is a Jarvis built just for me. This skill is somewhat basic, but it's helped me build a foundation for others I want to create.
+This is what I love about AI — the things you can do with it that are deeply personal. I grew up watching sci-fi movies, and what I want one day is a Jarvis built just for me. This skill is somewhat basic, but it's helped me build a foundation for others I want to create.
 
-I encourage anyone interested in AI to build a skill from scratch — one that helps you do something interesting and personal. That's where AI really shines.
+I encourage anyone interested in AI to build a skill from scratch — one that helps you do something interesting and personal. That's where (I think) AI really shines.
