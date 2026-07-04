@@ -19,6 +19,26 @@ Over the past three weeks, I built Astron, a workout tracker that behaves like a
 
 Astron is live at [useastron.com](https://www.useastron.com) — I've been testing it with a few friends (huge s/o to Mike, Thomas and Jasmine) and would genuinely love your feedback too.
 
+**Contents**
+
+- [Motivations](#motivations)
+- [Thinking through app design](#thinking-through-app-design)
+  - [Data](#data)
+  - [Server](#server)
+  - [Frontend](#frontend)
+  - [CI/CD](#cicd)
+  - [The whole system](#the-whole-system)
+- [In the trenches (what happened during build time)](#in-the-trenches-what-happened-during-build-time)
+  - [FastAPI and endpoints](#fastapi-and-endpoints)
+  - [Supabase](#supabase)
+  - [Data migrations using Alembic](#data-migrations-using-alembic)
+- [Next steps](#next-steps)
+  - [Use data to find personal records (PRs) and patterns](#use-data-to-find-personal-records-prs-and-patterns)
+  - [Data replication to not lose users data](#data-replication-to-not-lose-users-data)
+  - [OAuth Social authentication with Google and Apple](#oauth-social-authentication-with-google-and-apple)
+  - [Voice feature to not have to enter stuff manually](#voice-feature-to-not-have-to-enter-stuff-manually)
+  - [Share feature (that I'm excited about)](#share-feature-that-im-excited-about)
+
 ## Motivations
 
 I've been working out on and off for most of my life. The past couple of years I got more and more into it (especially calisthenics) and for the past 2-3 years, this is how I logged my workouts (Google notes):
