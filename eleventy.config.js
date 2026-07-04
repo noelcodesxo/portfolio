@@ -1,7 +1,20 @@
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
+import markdownItAnchor from "markdown-it-anchor";
 
 export default function (eleventyConfig) {
     eleventyConfig.addPlugin(syntaxHighlight);
+
+    eleventyConfig.amendLibrary("md", (mdLib) =>
+        mdLib.use(markdownItAnchor, {
+            level: [2, 3, 4],
+            slugify: (s) =>
+                s
+                    .trim()
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, "")
+                    .replace(/\s+/g, "-"),
+        })
+    );
 
     eleventyConfig.addPassthroughCopy("main.css");
     eleventyConfig.addPassthroughCopy("images");
