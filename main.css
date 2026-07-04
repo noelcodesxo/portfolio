@@ -39,6 +39,14 @@
 
     /* Grain overlay */
     --grain-opacity: 0.025;
+
+    /* Code syntax highlighting */
+    --code-keyword: #ff7b72;
+    --code-string: #a5d6ff;
+    --code-function: #d2a8ff;
+    --code-number: #79c0ff;
+    --code-comment: #8b949e;
+    --code-class: #ffa657;
 }
 
 /* Light theme - pure white, stark contrast */
@@ -65,6 +73,13 @@
         --link-underline: rgba(13, 148, 136, 0.35);
 
         --grain-opacity: 0.015;
+
+        --code-keyword: #cf222e;
+        --code-string: #0a3069;
+        --code-function: #8250df;
+        --code-number: #0550ae;
+        --code-comment: #6e7781;
+        --code-class: #953800;
     }
 }
 
@@ -481,6 +496,78 @@ header {
     border: none;
     padding: 0;
     color: var(--primary-muted);
+}
+
+/* Syntax highlighting (via @11ty/eleventy-plugin-syntaxhighlight / Prism) */
+.content pre .token.keyword,
+.content pre .token.operator,
+.content pre .token.boolean,
+.content pre .token.decorator {
+    color: var(--code-keyword);
+}
+
+.content pre .token.string,
+.content pre .token.attr-value {
+    color: var(--code-string);
+}
+
+.content pre .token.function {
+    color: var(--code-function);
+}
+
+.content pre .token.number {
+    color: var(--code-number);
+}
+
+.content pre .token.comment {
+    color: var(--code-comment);
+    font-style: italic;
+}
+
+.content pre .token.class-name,
+.content pre .token.builtin {
+    color: var(--code-class);
+}
+
+.content pre .token.property,
+.content pre .token.property-access {
+    color: var(--accent);
+}
+
+.content pre .token.punctuation {
+    color: var(--text-light);
+}
+
+/* Tables */
+.content table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.content th,
+.content td {
+    text-align: left;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--border);
+    line-height: 1.5;
+}
+
+.content th {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    color: var(--heading);
+    background-color: var(--bg-elevated);
+}
+
+.content td {
+    color: var(--text);
 }
 
 /* Blog link list - refined spacing */
