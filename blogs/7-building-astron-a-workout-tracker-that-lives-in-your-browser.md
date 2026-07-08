@@ -1,13 +1,13 @@
 ---
 title: Building Astron, a Workout Tracker That Lives in Your Browser
-description: I built Astron, a workout tracker that behaves like a native app but lives entirely in your browser — here's why I made it, how I designed it, and the stack behind it (FastAPI, SQLModel, Supabase, Alembic), plus why I chose app-level auth over RLS.
+description: I built Astron, a workout tracker that behaves like a native app but lives entirely in your browser — here's why I made it, how I designed it, and the stack behind it (FastAPI, SQLModel, Supabase, Alembic), plus why some interesting lessons learned!
 layout: blog.njk
 tags: blog
 topics:
   - engineering
   - python
   - supabase
-isFeedback: true
+isFeedback: false
 feedbackThoughts: Does the RLS vs. app-level auth explanation make sense, or does it need more detail? Is the offline/PWA section clear about what's actually built vs. planned? Does the special thanks section feel like a natural close, or out of place?
 ---
 
