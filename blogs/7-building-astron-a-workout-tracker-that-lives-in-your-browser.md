@@ -21,25 +21,32 @@ Astron is live at [useastron.com](https://www.useastron.com) — I've been testi
 
 **Contents**
 
-- [Motivations](#motivations)
-- [Thinking through app design](#thinking-through-app-design)
-  - [Data](#data)
-  - [Server](#server)
-  - [Frontend](#frontend)
-  - [CI/CD](#cicd)
-  - [The whole system](#the-whole-system)
-- [In the trenches (what happened during build time)](#in-the-trenches-what-happened-during-build-time)
-  - [FastAPI and endpoints](#fastapi-and-endpoints)
-  - [Supabase](#supabase)
-  - [Data migrations using Alembic](#data-migrations-using-alembic)
-- [Next steps](#next-steps)
-  - [Going offline first (or second (dumb joke mb!))](#going-offline-first-or-second-dumb-joke-mb)
-  - [Use data to find personal records (PRs) and patterns](#use-data-to-find-personal-records-prs-and-patterns)
-  - [Data replication to not lose users data](#data-replication-to-not-lose-users-data)
-  - [OAuth Social authentication with Google and Apple](#oauth-social-authentication-with-google-and-apple)
-  - [Voice feature to not have to enter stuff manually](#voice-feature-to-not-have-to-enter-stuff-manually)
-  - [Share feature (that I'm excited about)](#share-feature-that-im-excited-about)
-- [Special thanks](#special-thanks)
+- [Building Astron — a Workout Tracker That Lives in Your Browser](#building-astron--a-workout-tracker-that-lives-in-your-browser)
+  - [Intro](#intro)
+  - [Motivations](#motivations)
+  - [Thinking through app design](#thinking-through-app-design)
+    - [Data](#data)
+    - [Server](#server)
+    - [Frontend](#frontend)
+    - [CI/CD](#cicd)
+    - [The whole system](#the-whole-system)
+  - [In the trenches (what happened during build time)](#in-the-trenches-what-happened-during-build-time)
+    - [FastAPI and endpoints](#fastapi-and-endpoints)
+    - [Supabase](#supabase)
+      - [Supabase auth logic (why I went with app logic instead of RLS)](#supabase-auth-logic-why-i-went-with-app-logic-instead-of-rls)
+      - [Supabase database connections](#supabase-database-connections)
+      - [Supabase CLI](#supabase-cli)
+      - [Supabase authentication and issues with magic link](#supabase-authentication-and-issues-with-magic-link)
+      - [Supabase email limits and how I got over that](#supabase-email-limits-and-how-i-got-over-that)
+    - [Data migrations using Alembic](#data-migrations-using-alembic)
+  - [Next steps](#next-steps)
+    - [Going offline first (or second (dumb joke mb!))](#going-offline-first-or-second-dumb-joke-mb)
+    - [Use data to find personal records (PRs) and patterns](#use-data-to-find-personal-records-prs-and-patterns)
+    - [Data replication to not lose users data](#data-replication-to-not-lose-users-data)
+    - [OAuth Social authentication with Google and Apple](#oauth-social-authentication-with-google-and-apple)
+    - [Voice feature to not have to enter stuff manually](#voice-feature-to-not-have-to-enter-stuff-manually)
+    - [Share feature (that I'm excited about)](#share-feature-that-im-excited-about)
+  - [Special thanks](#special-thanks)
 
 ## Motivations
 
@@ -70,7 +77,7 @@ After going through all of those and not being happy with a single one, I decide
 - No profile creation requirement — this isn't an app that generates workouts for you; it's for people who already have a routine and just need somewhere to track it.
 - No app install requirement.
 - Good UX, built around actually creating routines and logging workouts.
-- Free — no ads, only pay for actual features that provide real value, which the app does not have at the moment.
+- Free — no ads, only pay for actual features that provide real (more than basic) value, which the app does not have at the moment.
 
 ## Thinking through app design
 
