@@ -1,6 +1,6 @@
 ---
 title: Building Astron, a Workout Tracker That Lives in Your Browser
-description: I built Astron, a workout tracker that behaves like a native app but lives entirely in your browser — here's why I made it, how I designed it, and the stack behind it (FastAPI, SQLModel, Supabase, Alembic).
+description: I built Astron, a workout tracker that behaves like a native app but lives entirely in your browser — here's why I made it, how I designed it, and the stack behind it (FastAPI, SQLModel, Supabase, Alembic), plus why I chose app-level auth over RLS.
 layout: blog.njk
 tags: blog
 topics:
@@ -8,50 +8,59 @@ topics:
   - python
   - supabase
 isFeedback: true
-feedbackThoughts: Does the motivation section make you care about why I built this? Does the technical section drag anywhere, and is there too much/too little depth on any one part (FastAPI, Supabase, migrations)?
+feedbackThoughts: Does the RLS vs. app-level auth explanation make sense, or does it need more detail? Is the offline/PWA section clear about what's actually built vs. planned? Does the special thanks section feel like a natural close, or out of place?
 ---
 
 # Building Astron — a Workout Tracker That Lives in Your Browser
 
 ## Intro
 
-Over the past three weeks, I built Astron, a workout tracker that behaves like a native app but lives entirely in your browser. In this post, I'll walk through what pushed me to build it, how I approached the design, the implementation details (tech stack, auth, migrations, and all), what I learned along the way, and where I'm taking it next.
+Over the past three weeks, I built [Astron](https://www.useastron.com), a workout tracker that behaves like a native app but lives entirely in your browser. In this post, I'll walk through what pushed me to build it, how I approached the design, the implementation details (tech stack, auth, data migrations, and all), what I learned along the way, and where I'm taking it next.
 
 Astron is live at [useastron.com](https://www.useastron.com) — I've been testing it with a few friends (huge s/o to Mike, Thomas and Jasmine) and would genuinely love your feedback too.
 
 **Contents**
 
-- [Motivations](#motivations)
-- [Thinking through app design](#thinking-through-app-design)
-  - [Data](#data)
-  - [Server](#server)
-  - [Frontend](#frontend)
-  - [CI/CD](#cicd)
-  - [The whole system](#the-whole-system)
-- [In the trenches (what happened during build time)](#in-the-trenches-what-happened-during-build-time)
-  - [FastAPI and endpoints](#fastapi-and-endpoints)
-  - [Supabase](#supabase)
-  - [Data migrations using Alembic](#data-migrations-using-alembic)
-- [Next steps](#next-steps)
-  - [Use data to find personal records (PRs) and patterns](#use-data-to-find-personal-records-prs-and-patterns)
-  - [Data replication to not lose users data](#data-replication-to-not-lose-users-data)
-  - [OAuth Social authentication with Google and Apple](#oauth-social-authentication-with-google-and-apple)
-  - [Voice feature to not have to enter stuff manually](#voice-feature-to-not-have-to-enter-stuff-manually)
-  - [Share feature (that I'm excited about)](#share-feature-that-im-excited-about)
+- [Building Astron — a Workout Tracker That Lives in Your Browser](#building-astron--a-workout-tracker-that-lives-in-your-browser)
+  - [Intro](#intro)
+  - [Motivations](#motivations)
+  - [Thinking through app design](#thinking-through-app-design)
+    - [Data](#data)
+    - [Server](#server)
+    - [Frontend](#frontend)
+    - [CI/CD](#cicd)
+    - [The whole system](#the-whole-system)
+  - [In the trenches (what happened during build time)](#in-the-trenches-what-happened-during-build-time)
+    - [FastAPI and endpoints](#fastapi-and-endpoints)
+    - [Supabase](#supabase)
+      - [Supabase auth logic (why I went with app logic instead of RLS)](#supabase-auth-logic-why-i-went-with-app-logic-instead-of-rls)
+      - [Supabase database connections](#supabase-database-connections)
+      - [Supabase CLI](#supabase-cli)
+      - [Supabase authentication and issues with magic link](#supabase-authentication-and-issues-with-magic-link)
+      - [Supabase email limits and how I got over that](#supabase-email-limits-and-how-i-got-over-that)
+    - [Data migrations using Alembic](#data-migrations-using-alembic)
+  - [Next steps](#next-steps)
+    - [Going offline first (or second (dumb joke mb!))](#going-offline-first-or-second-dumb-joke-mb)
+    - [Use data to find personal records (PRs) and patterns](#use-data-to-find-personal-records-prs-and-patterns)
+    - [Data replication to not lose users data](#data-replication-to-not-lose-users-data)
+    - [OAuth Social authentication with Google and Apple](#oauth-social-authentication-with-google-and-apple)
+    - [Voice feature to not have to enter stuff manually](#voice-feature-to-not-have-to-enter-stuff-manually)
+    - [Share feature (that I'm excited about)](#share-feature-that-im-excited-about)
+  - [Special thanks](#special-thanks)
 
 ## Motivations
 
-I've been working out on and off for most of my life. The past couple of years I got more and more into it (especially calisthenics) and for the past 2-3 years, this is how I logged my workouts (Google notes):
+I've been working out on and off for most of my life. The past couple of years I got more and more into it (especially calisthenics) and for the past 2-3 years, this is how I logged my workouts (Google Keep!):
 
 ![Old workout notes, screenshot 1](/images/7/old-workout-notes-1.png)
 
 ![Old workout notes, screenshot 2](/images/7/old-workout-notes-2.png)
 
-This was easy enough to do (which is why I kept doing it for so long). I'd just open my notes app and log whatever I was doing. But as I progressed and my goals grew, things got difficult. For example, I'd think to myself "How much did I squat last week?" so I could add more weight — to find out I had to scroll a wall of text to find that one entry. Other questions I couldn't easily answer:
+This was easy enough to do (which is why I kept doing it for so long). I'd just open my notes app and log whatever I was doing. But as I progressed and my goals grew, things got difficult. One of the problems was that Google Keep (as well as Samsung notes) limit how many characters a note can have, so at some point you'll run out of space. Another problem was being able to answer some questions easily. For example, I'd think to myself "How much did I squat last week?" so I could add more weight — to find out I had to scroll a wall of text to find that one entry. Other questions I couldn't easily answer:
 
 - "What was my longest handstand this month?"
 - "This is a PR, but what was the one before?"
-- Have I been progressing like I want (5lbs+ per week on squats)?
+- "Have I been progressing like I want (5lbs+ per week on squats)?"
 
 Some of you might be thinking: why not use an existing app? Why bother making something? The truth is, I did try a ton of apps before I decided to make this one. In fact, these are some of the apps I tried and why I didn't like them:
 
@@ -68,7 +77,7 @@ After going through all of those and not being happy with a single one, I decide
 - No profile creation requirement — this isn't an app that generates workouts for you; it's for people who already have a routine and just need somewhere to track it.
 - No app install requirement.
 - Good UX, built around actually creating routines and logging workouts.
-- Free — no ads, only pay for actual features that provide real value, which the app does not have at the moment.
+- Free — no ads, only pay for actual features that provide real (more than basic) value, which the app does not have at the moment.
 
 ## Thinking through app design
 
@@ -79,7 +88,10 @@ With the motivations in place, it was time to design the schema. It's relational
 ![Astron database schema](/images/7/db-schema.png)
 
 - A routine defines its own set of routine-exercises and belongs to a user.
-- Exercises are global rather than per-user. I didn't see the point of 10 users each defining "pull ups" separately. The trade-off is that deleting an exercise affects everyone — so exercises are only ever disabled, never fully removed.
+- Exercises are user-specific. Originally I made them global, mainly to avoid 10 different users all creating their own "pull ups" row. But the more I thought about it, the less it made sense:
+  - Everyone types exercises differently — "pull ups", "Pull-Ups", "pullups"
+  - This app targets athletes across different disciplines to log their workouts/create routines. Someone into bodybuilding doesn't need to see "planche holds" cluttering their exercise list — that's specific to calisthenics.
+  - I eventually want to offer pre-defined exercise lists tailored to a specific sport or training style that users can opt into. That means exercises need to be attachable to individual users, not shared globally, so I can target the right set of exercises to the right user.
 - A workout can be started from a routine (which loads all its exercises automatically) or as a free workout, where the user enters any exercise and sets/reps on the fly.
 - Each user can see and manage their own routines and exercises.
 
@@ -157,7 +169,7 @@ Thanks to FastAPI, the `post_workout` endpoint only takes `workout: WorkoutCreat
 }
 ```
 
-`service` never shows up in that payload (it's resolved as a dependency, not passed in by the client). That's the part I love about FastAPI's pattern: without dependency injection, I'd have to manually construct the service, session, and resolve and authorize the user inside every endpoint that needs them. This way, I declare each dependency once and reuse it anywhere.
+`service` never shows up in that payload (it's resolved as a dependency, not passed in by the client). That's the part I love about FastAPI's pattern: without dependency injection, I'd have to manually construct the service and session, and resolve and authorize the user, inside every endpoint that needs them. This way, I declare each dependency once and reuse it anywhere.
 
 ### Supabase
 
@@ -169,11 +181,28 @@ Signing in and spinning up a project took less than five minutes, and I had a wo
 - How do the different connection types work?
 - Could I replicate this myself, and get it for free?
 
+#### Supabase auth logic (why I went with app logic instead of RLS)
+
+I chose Supabase for authentication partly to see how it worked and why so many people go with it. Going through their docs, I noticed they push pretty hard for [row-level security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html) (RLS) right out of the gate — something I'd never used or even heard of before.
+
+RLS lets you add policies to a table that get evaluated at query time. A policy might say something like "does `user_id` on this row match the user_id making the query?" — if true, the row is returned; if not, it's excluded, as if it didn't exist.
+
+RLS is especially critical when clients query the database directly (such as raw SQL from the frontend, with no server in between). Since I'd already built a server with SQLModel handling all my queries, I decided to put the authorization logic there instead of pushing it down to the database. So instead of RLS, I handle authorization in the app logic. Here's how it works:
+
+- The client's session is managed by Supabase, which issues a signed JWT.
+- When the client calls the server (say, to fetch a user's routines), it sends that JWT along. The server validates it and checks that the requesting user is actually authorized to access the data they're asking for.
+
+This works well for my use case and I'm comfortable with the security trade-off — I'm leveraging Supabase's JWTs for identity, and my server enforces authorization on top of that. If my server gets a valid JWT that has a different identity than what the query wants, it will reject it. The request will never reach the database.
+
+(I know I could have both RLS and app-level auth. However, at this stage, I decided that what I have now is enough and don't want to add more complexity. Once I add a few more features, I will reconsider this approach)
+
 #### Supabase database connections
 
-Turns out that when you launch a Supabase project, they spin up an EC2 instance running Postgres behind it. I wouldn't be able to just spin up an EC2 instance myself on the free tier — AWS gives you more raw compute to work with directly, but once you cross the free-tier usage limits, you're paying regardless.
+Turns out that when you launch a Supabase project, they provision a dedicated Postgres instance on AWS for you. If I tried to do that myself (spinning up an EC2 instance and running Postgres on it), the free tier wouldn't get me far and I'd have to start paying rather quickly. Supabase's free tier is definitely generous.
 
-Supabase offers two connection types: burst connections (for Lambda-style compute) and long-lived connections (for always-on apps like ECS or Kubernetes). This is important because with the API in Vercel Functions, you could at any time spin up 50 (or more) Vercel Functions simultaneously, if you were using long-lived connections, you'd be opening and closing 50 separate connections in the span of a few seconds. Postgres (and most database engines) just isn't built to handle that kind of churn, and it goes through slow HTTP overhead each time. Burst connections solve this with a pooled set of long-lived connections underneath, handing one out whenever you need it and reclaiming it after (no manual open/close required).
+Supabase offers two connection types: direct connections and pooled connections (via their connection pooler, built on PgBouncer/Supavisor). This distinction matters a lot for serverless compute like Vercel Functions. Postgres has a hard limit on how many concurrent connections it can hold open (each connection consumes resources from the database server, so there must be a ceiling, or the server risks running out of memory or crashing under load). If 50 Vercel Functions spin up simultaneously and each one opens its own direct connection to Postgres, you can blow through that connection limit almost immediately. On top of that, every new connection has real setup cost (a TCP handshake, followed by a TLS handshake, and Postgres's own authentication step) which adds latency you don't want to pay repeatedly for short-lived serverless invocations.
+
+Pooled connections solve this problem by sitting a connection pooler in front of Postgres: the pooler maintains a smaller set of direct connections to the database, and incoming client requests go through the pooler and share those connections instead of each one opening its own. The pooler handles the pool of connections itself, so serverless functions only need to worry about reaching the pooler and getting handed a connection — removing that overhead from the functions themselves.
 
 #### Supabase CLI
 
@@ -210,9 +239,17 @@ Overall, Alembic does exactly what it needs to: it's easy to set up, and I reall
 
 ## Next steps
 
+### Going offline first (or second (dumb joke mb!))
+
+Astron became a progressive web app (PWA) as I worked on it. For anyone unfamiliar: a PWA is a website that uses a service worker — a script that runs in the background, independently of the page itself — to behave more like a native mobile app. One of the things a service worker can do is intercept network requests, which (combined with local storage like the Cache API or IndexedDB) is what makes offline support possible.
+
+Right now, Astron does not work offline. I built it online-only from the start, and by the time I realized how useful having offline mode would be (since a lot of gyms have slow connections and what not), most of the app was already built. I've never designed an offline-first app before, so there's some learning and design work I gotta do in order to set this up properly.
+
+The goal: once this ships, you should be able to use Astron almost entirely offline (log workouts, create routines, etc) and have everything sync automatically the moment you're back online.
+
 ### Use data to find personal records (PRs) and patterns
 
-I want to have a page where people can see their PRs. I am thinking this will be just grabbed from the workout automatically to see all-time PRs, and then 3-6-12 month ones, or something along those lines that I want to refine.
+I want to have a page where people can see their PRs. I am thinking this will be pulled automatically from workout history — all-time PRs, and then 3-6-12 month ones, or something along those lines that I want to refine.
 
 I know not everyone is competitive and some people work out for the health benefits and don't care much about the number. However, there are many people that do care and I am one of those, plus I think everyone could benefit from seeing this and realizing how much they've improved over time. It just makes you feel happy to see your own progress.
 
@@ -222,7 +259,7 @@ At the moment there is no data replication, if something happened to my Supabase
 
 ### OAuth Social authentication with Google and Apple
 
-Since the magic link didn't end up working and now you have to enter an OTP, I really want to enable Google and Apple authentication for anyone who rather use that to log into the app. I just need to make the accounts for each provider and complete the setup, so don't expect this to take too long.
+Since the magic link didn't end up working and now you have to enter an OTP, I really want to enable Google and Apple authentication for anyone who'd rather use that to log into the app. I just need to make the accounts for each provider and complete the setup, so don't expect this to take too long.
 
 ### Voice feature to not have to enter stuff manually
 
@@ -234,4 +271,13 @@ I haven't even planned to charge for anything so I'll have to come up with somet
 
 The overall idea of this application was to simply track your workouts, that's the truth. I wanted it for myself, but as I started to make it, I thought it wouldn't be difficult and would make me feel better to make it not only for me but anyone who wanted to use it.
 
-I don't run, but on Instagram I do follow a few people who do, there is an app I've never used called Strava, they seem to have a share feature that shows how much you run, at which speed, and has like a little map showing the route you took. I want to think of something cool like that for this app; a share feature that shows the workout you did, maybe highlighting some numbers or PRs if any. I'll share more when I refine this.
+I don't run, but I follow a few runners on Instagram, and I've seen the Strava app come up. I've never used it myself, but they have a share feature that shows distance, pace, and even a little map of your route. I want to think of something cool like that for this app — a share feature that shows the workout you did, maybe highlighting some numbers or PRs if any. I'll share more when I refine this.
+
+## Special thanks
+
+A few friends (all sharp folks in tech) tested Astron early on and gave feedback on this post as it came together. I'm lucky to have people this generous with their time, and wanted to give them a proper shoutout:
+
+- [Mike Chen](https://www.linkedin.com/in/chenhmike/)
+- [Jasmine Vo](https://www.linkedin.com/in/jasminepvo/)
+- [Thomas Nguyen](https://www.linkedin.com/in/thomasnguyensoftware/)
+- [Bethany Ann](https://www.linkedin.com/in/bethanyann/)
