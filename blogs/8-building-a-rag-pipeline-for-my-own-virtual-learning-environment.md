@@ -7,8 +7,6 @@ topics:
   - ai
   - rag
   - engineering
-isFeedback: true
-feedbackThoughts: Does the RAG pipeline breakdown make sense to someone unfamiliar with the concepts? Is the TF-IDF walkthrough clear, or too much detail for a blog post?
 ---
 
 # Building a RAG Pipeline for My Own Virtual Learning Environment
