@@ -1,5 +1,5 @@
 ---
-title: Building a RAG Pipeline for My Own Virtual Learning Environment
+title: Building a virtual learning environment - First blog
 description: I quit my job to upskill into AI Engineering, and the first project I'm building in the open is a virtual learning environment. Here's how I built the RAG pipeline behind it — chunker, pre-processor, indexer, and retriever.
 layout: blog.njk
 tags: blog
@@ -7,11 +7,9 @@ topics:
   - ai
   - rag
   - engineering
-isFeedback: true
-feedbackThoughts: Does the RAG pipeline breakdown make sense to someone unfamiliar with the concepts? Is the TF-IDF walkthrough clear, or too much detail for a blog post?
 ---
 
-# Building a RAG Pipeline for My Own Virtual Learning Environment
+# Building a virtual learning environment - First blog
 
 ### I quit my job
 
