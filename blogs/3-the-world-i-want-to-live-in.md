@@ -1,6 +1,7 @@
 ---
 title: The world I want to live in
 description: A reflection on the kind of world I want to help build — through the work I do and the values I carry.
+date: 2026-03
 layout: blog.njk
 tags: blog
 topics:

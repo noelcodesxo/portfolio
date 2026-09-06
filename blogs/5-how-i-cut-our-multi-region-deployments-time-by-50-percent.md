@@ -1,6 +1,7 @@
 ---
 title: How I cut our multi-region deployments time by 50%
 description: How I used Spinnaker's parent pipeline to run multi-region deployments in parallel, cutting deploy time by 50 percent.
+date: 2026-03
 layout: blog.njk
 tags: blog
 topics:
