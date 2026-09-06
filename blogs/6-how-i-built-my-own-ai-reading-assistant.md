@@ -1,6 +1,7 @@
 ---
 title: How I Built My Own AI Reading Assistant (and Kept Making It Smarter)
 description: I was feeling stressed about AI and the tech industry moving so fast, so I made an AI skill that could help me read and learn things fast to not fall behind.
+date: 2026-05-15
 layout: blog.njk
 tags: blog
 topics:
