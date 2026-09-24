@@ -441,6 +441,32 @@ header {
     opacity: 0.85;
 }
 
+.content figure {
+    width: fit-content;
+    max-width: 100%;
+    margin: 2rem auto;
+}
+
+.content figure img {
+    display: block;
+    margin: 0 auto;
+}
+
+.content figcaption {
+    margin-top: 0.65rem;
+    color: var(--text-light);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.content hr {
+    width: 4rem;
+    margin: 2.5rem auto;
+    border: 0;
+    border-top: 1px solid var(--border-light);
+}
+
 /* Lightbox */
 .lightbox {
     display: none;
