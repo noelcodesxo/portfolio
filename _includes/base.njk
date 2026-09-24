@@ -35,8 +35,28 @@
     {% endblock %}
 
     {# Theme color for mobile browsers #}
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" id="theme-color" content="#000000">
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const themeColor = document.getElementById('theme-color');
+            let savedTheme = null;
+
+            try {
+                const storedTheme = window.localStorage.getItem('noelcodes-theme');
+                if (storedTheme === 'dark' || storedTheme === 'light') {
+                    savedTheme = storedTheme;
+                    root.dataset.theme = storedTheme;
+                }
+            } catch {}
+
+            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const activeTheme = savedTheme || (prefersLight ? 'light' : 'dark');
+            if (themeColor) {
+                themeColor.content = activeTheme === 'light' ? '#ffffff' : '#000000';
+            }
+        })();
+    </script>
 
     {# Favicon #}
     <link rel="icon" href="/images/favicon.ico" sizes="any">
@@ -80,6 +100,20 @@
                 <li><a href="/about" class="nav-link">About</a></li>
                 <li><a href="/contact" class="nav-link">Contact</a></li>
             </ul>
+            <button class="theme-toggle" id="theme-toggle" type="button" role="switch" aria-label="Dark theme" aria-checked="false" hidden>
+                <span class="theme-toggle-icon theme-toggle-icon-light" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+                    </svg>
+                </span>
+                <span class="theme-toggle-icon theme-toggle-icon-dark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M20.3 15.5A8.5 8.5 0 0 1 8.5 3.7 8.5 8.5 0 1 0 20.3 15.5Z"></path>
+                    </svg>
+                </span>
+                <span class="theme-toggle-thumb" aria-hidden="true"></span>
+            </button>
         </nav>
     </header>
     <main>
@@ -117,6 +151,60 @@
                 updateHamburgerLabel(false);
             });
         });
+        </script>
+
+        <script>
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeRoot = document.documentElement;
+            const themeColor = document.getElementById('theme-color');
+            const systemThemePreference = window.matchMedia
+                ? window.matchMedia('(prefers-color-scheme: light)')
+                : null;
+
+            function getActiveTheme() {
+                if (themeRoot.dataset.theme === 'dark' || themeRoot.dataset.theme === 'light') {
+                    return themeRoot.dataset.theme;
+                }
+                return systemThemePreference && systemThemePreference.matches ? 'light' : 'dark';
+            }
+
+            function updateThemeToggle() {
+                const activeTheme = getActiveTheme();
+                themeToggle.setAttribute('aria-checked', String(activeTheme === 'dark'));
+                if (themeColor) {
+                    themeColor.content = activeTheme === 'light' ? '#ffffff' : '#000000';
+                }
+            }
+
+            themeToggle.addEventListener('click', event => {
+                event.stopPropagation();
+
+                const nextTheme = getActiveTheme() === 'dark' ? 'light' : 'dark';
+                themeRoot.dataset.theme = nextTheme;
+
+                try {
+                    window.localStorage.setItem('noelcodes-theme', nextTheme);
+                } catch {}
+
+                updateThemeToggle();
+            });
+
+            if (systemThemePreference) {
+                const updateForSystemChange = () => {
+                    if (!themeRoot.dataset.theme) {
+                        updateThemeToggle();
+                    }
+                };
+
+                if (systemThemePreference.addEventListener) {
+                    systemThemePreference.addEventListener('change', updateForSystemChange);
+                } else if (systemThemePreference.addListener) {
+                    systemThemePreference.addListener(updateForSystemChange);
+                }
+            }
+
+            updateThemeToggle();
+            themeToggle.hidden = false;
         </script>
 
         <script>
