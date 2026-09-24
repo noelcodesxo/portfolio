@@ -35,8 +35,28 @@
     {% endblock %}
 
     {# Theme color for mobile browsers #}
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" id="theme-color" content="#000000">
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const themeColor = document.getElementById('theme-color');
+            let savedTheme = null;
+
+            try {
+                const storedTheme = window.localStorage.getItem('noelcodes-theme');
+                if (storedTheme === 'dark' || storedTheme === 'light') {
+                    savedTheme = storedTheme;
+                    root.dataset.theme = storedTheme;
+                }
+            } catch {}
+
+            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const activeTheme = savedTheme || (prefersLight ? 'light' : 'dark');
+            if (themeColor) {
+                themeColor.content = activeTheme === 'light' ? '#ffffff' : '#000000';
+            }
+        })();
+    </script>
 
     {# Favicon #}
     <link rel="icon" href="/images/favicon.ico" sizes="any">
@@ -80,6 +100,7 @@
                 <li><a href="/about" class="nav-link">About</a></li>
                 <li><a href="/contact" class="nav-link">Contact</a></li>
             </ul>
+            <button class="theme-toggle" id="theme-toggle" type="button" hidden>Switch to light theme</button>
         </nav>
     </header>
     <main>
@@ -117,6 +138,64 @@
                 updateHamburgerLabel(false);
             });
         });
+        </script>
+
+        <script>
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeRoot = document.documentElement;
+            const themeColor = document.getElementById('theme-color');
+            const systemThemePreference = window.matchMedia
+                ? window.matchMedia('(prefers-color-scheme: light)')
+                : null;
+
+            function getActiveTheme() {
+                if (themeRoot.dataset.theme === 'dark' || themeRoot.dataset.theme === 'light') {
+                    return themeRoot.dataset.theme;
+                }
+                return systemThemePreference && systemThemePreference.matches ? 'light' : 'dark';
+            }
+
+            function updateThemeToggle() {
+                const activeTheme = getActiveTheme();
+                const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
+                const actionLabel = `Switch to ${nextTheme} theme`;
+
+                themeToggle.textContent = actionLabel;
+                themeToggle.setAttribute('aria-label', actionLabel);
+                if (themeColor) {
+                    themeColor.content = activeTheme === 'light' ? '#ffffff' : '#000000';
+                }
+            }
+
+            themeToggle.addEventListener('click', event => {
+                event.stopPropagation();
+
+                const nextTheme = getActiveTheme() === 'dark' ? 'light' : 'dark';
+                themeRoot.dataset.theme = nextTheme;
+
+                try {
+                    window.localStorage.setItem('noelcodes-theme', nextTheme);
+                } catch {}
+
+                updateThemeToggle();
+            });
+
+            if (systemThemePreference) {
+                const updateForSystemChange = () => {
+                    if (!themeRoot.dataset.theme) {
+                        updateThemeToggle();
+                    }
+                };
+
+                if (systemThemePreference.addEventListener) {
+                    systemThemePreference.addEventListener('change', updateForSystemChange);
+                } else if (systemThemePreference.addListener) {
+                    systemThemePreference.addListener(updateForSystemChange);
+                }
+            }
+
+            updateThemeToggle();
+            themeToggle.hidden = false;
         </script>
 
         <script>
