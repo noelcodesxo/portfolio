@@ -35,8 +35,27 @@
     {% endblock %}
 
     {# Theme color for mobile browsers #}
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" id="theme-color" content="#000000">
+
+    {# Apply a saved theme before the stylesheet is loaded to avoid a theme flash. #}
+    <script>
+        (() => {
+            const root = document.documentElement;
+
+            try {
+                const savedTheme = window.localStorage.getItem('portfolio-theme');
+                if (savedTheme === 'light' || savedTheme === 'dark') {
+                    root.setAttribute('data-theme', savedTheme);
+                }
+            } catch {
+                // Storage may be unavailable; CSS will use the system preference.
+            }
+
+            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const theme = root.getAttribute('data-theme') || (prefersLight ? 'light' : 'dark');
+            document.getElementById('theme-color').content = theme === 'light' ? '#ffffff' : '#000000';
+        })();
+    </script>
 
     {# Favicon #}
     <link rel="icon" href="/images/favicon.ico" sizes="any">
@@ -68,7 +87,7 @@
         <a href="/" class="nav-logo">
             <p>Noel Codes</p>
         </a>
-        <nav class="navbar" id="nav">
+        <nav class="navbar">
             <button class="hamburger" id="hamburger" aria-label="open navigation menu" title="open navigation menu">
                 <span></span>
                 <span></span>
@@ -80,6 +99,10 @@
                 <li><a href="/about" class="nav-link">About</a></li>
                 <li><a href="/contact" class="nav-link">Contact</a></li>
             </ul>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false" title="Toggle color theme">
+                <span class="theme-toggle-icon" id="theme-toggle-icon" aria-hidden="true">☾</span>
+                <span class="theme-toggle-label" id="theme-toggle-label">Dark</span>
+            </button>
         </nav>
     </header>
     <main>
@@ -91,7 +114,6 @@
         <script>
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('nav-menu');
-        const nav = document.getElementById('nav');
 
         function updateHamburgerLabel(isOpen) {
             const label = isOpen ? 'close navigation menu' : 'open navigation menu';
@@ -99,14 +121,11 @@
             hamburger.setAttribute('title', label);
         }
 
-        nav.addEventListener('click', () => {
-            const display = window.getComputedStyle(hamburger).display;
-            if (display !== "none") {
-                const isOpen = !hamburger.classList.contains('active');
-                hamburger.classList.toggle('active');
-                navMenu.classList.toggle('active');
-                updateHamburgerLabel(isOpen);
-            }
+        hamburger.addEventListener('click', () => {
+            const isOpen = !hamburger.classList.contains('active');
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            updateHamburgerLabel(isOpen);
         });
 
         // Close menu when a link is clicked
@@ -117,6 +136,54 @@
                 updateHamburgerLabel(false);
             });
         });
+        </script>
+
+        <script>
+        (() => {
+            const root = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-toggle-icon');
+            const themeLabel = document.getElementById('theme-toggle-label');
+            const themeColor = document.getElementById('theme-color');
+            const systemPreference = window.matchMedia('(prefers-color-scheme: light)');
+
+            function currentTheme() {
+                return root.getAttribute('data-theme') || (systemPreference.matches ? 'light' : 'dark');
+            }
+
+            function updateThemeControl() {
+                const theme = currentTheme();
+                const isDark = theme === 'dark';
+                const nextTheme = isDark ? 'light' : 'dark';
+
+                themeToggle.setAttribute('aria-pressed', String(isDark));
+                themeToggle.title = `Current theme: ${theme}. Activate to use ${nextTheme} theme.`;
+                themeIcon.textContent = isDark ? '☾' : '☀';
+                themeLabel.textContent = isDark ? 'Dark' : 'Light';
+                themeColor.content = isDark ? '#000000' : '#ffffff';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                const nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+                root.setAttribute('data-theme', nextTheme);
+
+                try {
+                    window.localStorage.setItem('portfolio-theme', nextTheme);
+                } catch {
+                    // Keep the selected theme for this page even if storage is unavailable.
+                }
+
+                updateThemeControl();
+            });
+
+            if (typeof systemPreference.addEventListener === 'function') {
+                systemPreference.addEventListener('change', updateThemeControl);
+            } else if (typeof systemPreference.addListener === 'function') {
+                systemPreference.addListener(updateThemeControl);
+            }
+
+            updateThemeControl();
+        })();
         </script>
 
         <script>

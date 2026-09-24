@@ -51,7 +51,7 @@
 
 /* Light theme - pure white, stark contrast */
 @media (prefers-color-scheme: light) {
-    :root {
+    :root:not([data-theme]) {
         --primary: #000000;
         --primary-muted: #171717;
         --text: #525252;
@@ -81,6 +81,37 @@
         --code-comment: #6e7781;
         --code-class: #953800;
     }
+}
+
+:root[data-theme="light"] {
+    --primary: #000000;
+    --primary-muted: #171717;
+    --text: #525252;
+    --text-light: #737373;
+    --text-lighter: #a3a3a3;
+    --bg: #ffffff;
+    --bg-subtle: #fafafa;
+    --bg-elevated: #f5f5f5;
+    --border: #e5e5e5;
+    --border-light: #d4d4d4;
+    --heading: #000000;
+
+    --accent: #0d9488;
+    --accent-hover: #0f766e;
+    --accent-subtle: rgba(13, 148, 136, 0.08);
+
+    --link: #0d9488;
+    --link-hover: #0f766e;
+    --link-underline: rgba(13, 148, 136, 0.35);
+
+    --grain-opacity: 0.015;
+
+    --code-keyword: #cf222e;
+    --code-string: #0a3069;
+    --code-function: #8250df;
+    --code-number: #0550ae;
+    --code-comment: #6e7781;
+    --code-class: #953800;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -143,6 +174,7 @@ header {
     width: auto;
     display: inline-flex;
     align-items: center;
+    gap: 0.75rem;
 }
 
 .nav-logo {
@@ -163,6 +195,33 @@ header {
 
 .nav-logo p {
     margin: 0;
+}
+
+.theme-toggle {
+    position: relative;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    font: 500 0.8rem 'Source Sans 3', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    color: var(--heading);
+    border-color: var(--accent);
+}
+
+.theme-toggle-icon {
+    font-size: 1rem;
+    line-height: 1;
 }
 
 /* Oni mask logo */
@@ -267,6 +326,10 @@ header {
 @media (min-width: 640px) {
     header {
         padding: 2rem 2rem 1.5rem;
+    }
+
+    .navbar {
+        gap: 2rem;
     }
 
     .hamburger {
