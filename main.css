@@ -388,6 +388,10 @@ header {
         display: none;
     }
 
+    .navbar {
+        gap: 2.5rem;
+    }
+
     .nav-menu {
         display: flex !important;
         flex-direction: row;
@@ -399,10 +403,6 @@ header {
         gap: 2.5rem;
         padding: 0;
         box-shadow: none;
-    }
-
-    .theme-toggle {
-        margin-left: 0.5rem;
     }
 
     .nav-link {
