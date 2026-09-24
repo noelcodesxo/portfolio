@@ -100,7 +100,7 @@
                 <li><a href="/about" class="nav-link">About</a></li>
                 <li><a href="/contact" class="nav-link">Contact</a></li>
             </ul>
-            <button class="theme-toggle" id="theme-toggle" type="button" hidden>Switch to light theme</button>
+            <button class="theme-toggle" id="theme-toggle" type="button" hidden>Use light</button>
         </nav>
     </header>
     <main>
@@ -160,8 +160,9 @@
                 const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
                 const actionLabel = `Switch to ${nextTheme} theme`;
 
-                themeToggle.textContent = actionLabel;
+                themeToggle.textContent = `Use ${nextTheme}`;
                 themeToggle.setAttribute('aria-label', actionLabel);
+                themeToggle.title = actionLabel;
                 if (themeColor) {
                     themeColor.content = activeTheme === 'light' ? '#ffffff' : '#000000';
                 }
