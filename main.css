@@ -643,6 +643,19 @@ header {
     color: var(--primary-muted);
 }
 
+/* Long prose prompts should remain readable without horizontal scrolling. */
+.content figure.prompt-figure pre,
+.content figure.prompt-figure pre code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.content figure.prompt-figure pre {
+    overflow-x: hidden;
+    margin: 0;
+}
+
 /* Syntax highlighting (via @11ty/eleventy-plugin-syntaxhighlight / Prism) */
 .content pre .token.keyword,
 .content pre .token.operator,
