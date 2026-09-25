@@ -13,118 +13,94 @@ feedbackThoughts: Do the before-and-after examples make the difference between w
 
 # Adding exam generation to virtual learning environment - Second blog
 
+## Intro
+
+My goal in building this project is to have something that anyone can use to learn more effectively. A RAG pipeline that answers your questions regarding topics in your resources is not enough.
+
+In this second blog of this series (where I share how I'm building this project), I share how I built the exam generation feature and how using it is better than just asking an LLM to make you an exam.
+
 ## Exam generation feature
 
-As I began working on the exam generation feature for the project, I decided to create a form that will take a document from the resources in the project, and a section from that document to generate the exam from. The selected document and the section, along with instructions are sent to an LLM to generate the exam.
+### Naive generation feature
 
-As I was testing this, I realized the local model (`Qwen3:8b`) I was using for the chat couldn't be used because between the system prompt and the section of a long document, such as a book or research paper, can be too much for its context window. I ended up adding support for OpenRouter models so that it's easy to pick any model you want. I've been using `glm-5.3-flash` from [zcode](https://zcode.z.ai/) to test with, and so far it is good, and very cheap.
+When I designed this feature, I didn't pay much attention to the prompt. I thought more about how to store exams, how many answers a question should have and how to navigate the exam using the keyboard. It is safe to say the first few exams were bad. All the questions tested only basic recall. Also, sometimes the LLM would generate really bad, obviously incorrect answers, which made it easier to pick the correct answer.
 
-## I read a research paper that made me realize how bad the exams that the project generates (and even LLMs directly generate) are
 
-Look, I could be wrong, but I have a feeling that people who use LLMs to learn effectively are simply saying "Generate an exam for me to study X". That is definitely better than no exam at all. But a good exam should include different types of questions that focus on different things, such as applying a concept you learned or analyzing different scenarios to choose the correct answer. In my experience, the LLM was generating very simple questions to mostly test recall. Open-ended questions let learners explain things in their own words, though they can be a bit more difficult to review with AI since it's non-deterministic and explanations can differ a lot.
+![Early exam question about techniques from chapter 7 of Hands-On Large Language Models.](/images/9/before-handson-question.png)
 
-The research paper I read is [A Comparative Study of AI-Generated (GPT-4) and Human-crafted MCQs in Programming Education](https://arxiv.org/pdf/2312.03173). I want to share a little bit about what I learned and what I implemented in the project to make the exam generation better.
+Here is an example of a bad question. One could answer this by simply reading chapter 7 of "*Hands-On Large Language Models*" and remembering the information, or by eliminating incorrect statements such as these: model I/O, memory, and the other techniques don't require to fine-tune the model; these techniques don't fine-tune the LLM's weights; and they don't require a new model.
 
-### Multiple Choice Questions (MCQs)
+```
+You are an exam writer for a study assistant. You will be given source excerpts from one selected chapter or document. Write multiple-choice questions that test understanding of that source - every question must be answerable using only the excerpts provided. Do not use outside knowledge or add facts that are absent from the chapter.
 
-The paper only focuses on MCQs, because when you generate MCQs the components—the stem (question), the distractors (2 or so wrong answers) and the key (the correct answer)—are simple enough to verify.
+First, silently plan the exam around the chapter's most important learning objectives: its central concepts, relationships, methods, trade-offs, and ideas needed to understand other material. Prioritize questions that test those ideas, including their application and meaningful distinctions. Avoid trivia, isolated examples, minor terminology, and repeated variations of the same fact unless they are essential to the chapter's core objective. Cover the important ideas deliberately for the requested question count.
+```
+Initial prompt used. Notice how there are no detailed instructions for creating the questions.
 
-I learned that a high-quality MCQ should have a clear and focused steam (not too long or complicated). The distractors should **not** give away the correct answer, they should be phrased positively and be true statements that don't correctly answer the stem. The key should also not make it obvious that it is the correct answer.
+### Improvements to exam generation feature (implementing what I learned from a research paper)
 
-### Learning objectives
+I decided to improve the exam generation feature after noticing that some LLM-generated answers were obviously incorrect and reading [A Comparative Study of AI-Generated (GPT-4) and Human-crafted MCQs in Programming Education](https://arxiv.org/pdf/2312.03173).
 
-In the paper they generated MCQs for exams from university courses in which they had learning objectives such as "Explain what Python is and how to use it to run single-line expressions as well as small multi-line programs". They used a classifier model ([BERT](https://arxiv.org/abs/1810.04805)) to take those types of learning objectives and classify them into [Bloom's Taxonomy levels](https://www.valamis.com/hub/blooms-taxonomy), and from Bloom's Taxonomy levels to question types such as fill-in-the-blank, scenario-based or correct output.
+The first thing I did was add a form to let users select [Bloom's Taxonomy](https://www.valamis.com/hub/blooms-taxonomy) levels—each describes a different learning outcome and goes from simply remembering information to creating something new. For the project, the prompt includes two example questions for each level the user selects to guide the LLM in generating questions aligned with the desired learning outcomes.
 
-I decided to add a filter to the exam generation form so users can select the Bloom's Taxonomy levels they want. Each level is mapped to two example questions, which are sent in the prompt to the LLM. For example, if you pick `remember`, the prompt includes those two examples. If you also pick `apply`, it includes four question examples.
+![Bloom's Taxonomy level selector showing remember, understand, apply, analyze, evaluate, and create.](/images/9/bloom-taxonomy-levels.png)
 
-<figure>
-  <img src="/images/9/build_exam_form.jpg" alt="Exam-generation form with a description field, source and chapter selectors, question-count controls, and six selected Bloom's Taxonomy levels.">
-  <figcaption>Exam form with all six Bloom's Taxonomy levels selected.</figcaption>
-</figure>
+The second thing I did was add a definition of what makes a high-quality multiple-choice question (MCQ). One of the key things I learned from the research paper is that the distractors should **not** give away the correct answer. They should be true statements that don't correctly answer the question.
 
-The thing that surprised me at first was that in their research they were not uploading the full content of the courses into the LLM. They provided course and module information along with learning objectives, and relied on the model’s training data for its Python knowledge. For my project, though, that approach wouldn't work. One reason I started this project was my experience trying to use Sonnet in [claude.ai](https://claude.ai) to generate exams. When I asked it to make an exam from a specific book and section, it generated questions about the book's topics, but they weren't necessarily grounded in the book's actual information. I wanted to provide the relevant text so the generated questions could use it.
+### Comparing exams generated before the updates and after
 
-<figure>
-  <img src="/images/9/claude-book-chapter-context.png" alt="Claude says it cannot retrieve a book chapter from memory and asks the user to provide the text to create a quiz grounded in that chapter.">
-  <figcaption>Claude asks for the chapter text before generating a source-grounded quiz.</figcaption>
-</figure>
+**Important note**: The non-deterministic nature of LLMs means they generate different exams each time. That's why I'm not comparing the exact same ones.
 
-### Question type examples
+#### Example one
 
-I had already built the exam generation feature before reading this paper. I had noticed that some questions were bad because the correct answer was almost obvious. After reading the paper, I wanted to update the exam generation module to add Bloom's Taxonomy levels, support different types of questions, and improve the quality of the questions being generated by providing example questions to the model.
+![Before the update, a prompt-engineering question with obviously false distractors.](/images/9/before-ai-engineering.png)
 
-The way I implemented Bloom's Taxonomy levels was to send the LLM two question examples for each level the user selects, as I explained above. In my testing, the changes resulted in more varied and better aligned exams with questions that test the cognitive process associated with the selected Bloom's Taxonomy level.
+Before updating exam generation
 
-## Improvements to project from last blog
+**Explanation**
+Answer #4 is a false statement because prompt engineering doesn't only work with models that have been fine-tuned. Answer #2 is also a false statement because prompt engineering is not more resource-intensive than fine-tuning a model.
 
-### Durable resources
+Notice how those false statements make it easier to pick the correct answer.
 
-The project now saves your resources so that when it gets reset they remain there.
+![After the update, a prompt-engineering question with plausible distractors.](/images/9/after-ai-engineering.png)
 
-### Durable index and BM25
+After updating exam generation
 
-I also made it so that the application loads the saved index at startup instead of rebuilding it each time. The index is a JSON file containing the chunks and their precomputed scores. It used TF-IDF before, but now it uses BM25.
+**Explanation**
+Better distractors; all of them are true statements. They also don't make the correct answer obvious. Someone new to LLMs could easily pick an incorrect answer, which is the point of high-quality distractors.
 
-The main difference between TF-IDF and BM25 is that BM25 accounts for document length. This helps reduce length-related bias when searching across sections of different sizes, so longer sections are less likely to rank higher just because they contain a search term more often. This can help the chat find useful information across all your resources, including shorter sections.
+#### Example 2
 
-### Exam generation
+![Before the update, a question about the limits of recurrent sequence models.](/images/9/before-attention.png)
 
-This is the new feature that you can use to generate good exams to aid with your learning, which is the main objective I have with this project.
+Before updating exam generation
 
-I asked Codex (my new favorite agent) to generate screenshots of before and after exams while I was writing this because I forgot to do it while I was working on implementing the feature.
+**Explanation**
+Answer #3 is a false statement because recurrent sequence models can use attention mechanisms. Answer #4 is false because recurrent sequence models can be trained with gradient-based methods.
 
-Here are a couple of before and after (updating the exam generation feature) exams. And quick note: Since I'm feeding the section of a document to the LLM to generate the questions, every time I send a request I get slightly different answers, so I couldn't do a before/after with the same questions.
+![After the update, a scenario about processing long sequences without sequential hidden-state generation.](/images/9/after-attention.png)
 
-#### Example #1
+After updating exam generation
 
-<figure>
-  <img src="/images/9/before-ai-engineering.png" alt="Before the update, the prompt-engineering question has false distractors claiming it changes model weights, costs more than fine-tuning, or only works with fine-tuned models.">
-  <figcaption>Before updating exam generation</figcaption>
-</figure>
+It's not perfect yet. Even with the improvements, answer #3 on this exam is a false statement as well: longer sequences and larger datasets generally require more memory.
 
-<b>Explanation</b>
+Overall, though, these changes greatly improved the quality of the exams the project generates.
 
-As you can see in the before, answer #4 is a wrong statement. Prompt engineering does not only work with models that have been fine-tuned. Even without a model being fine-tuned, you could do prompt engineering (whether it helps the model or not is a different thing). Answer #2 is also a wrong statement because prompt engineering is not more resource-intensive than fine-tuning a model. The resource cost of inference is far less than the resource cost of fine-tuning a model.
+## Virtual learning environment
 
-**Remember, a high quality MCQ should have distractors that are true statements.**
+### Overall improvements to the project
 
-<figure>
-  <img src="/images/9/after-ai-engineering.png" alt="After the update, a tenant-rights chatbot scenario asks how to separate its instructions from the uploaded lease and the user's question across system and user prompts.">
-  <figcaption>After updating exam generation</figcaption>
-</figure>
+Some other changes I didn't talk about in detail are:
+- Resources don't get removed when you restart the project.
+- Exams don't get removed when you restart the project.
+- The RAG pipeline now uses BM25 instead of TF-IDF. This change makes the chat feature work better because BM25 accounts for document length, making the LLM less likely to give you the table of contents (TOC) as a reference.
 
-<b>Explanation</b>
+### Next steps (Job's not finished)
 
-Better distractors, all of them are true statements. They also don't make the correct answer obvious. Somebody new to LLMs could easily pick the correct answer - that's the point of a high quality distractor.
+At the beginning of the blog, I talked about how my goal with this project is to have something that can help you learn more effectively. I'm already using it every day to generate exams from the resources I'm consuming, and so far it's good. But it's definitely not done by any means.
 
-#### Example #2
+I want to continue to improve the quality of exams generated, give the project a proper design (I may potentially work with an amazing friend who is a designer) and work on Anki generation/integration.
 
-<figure>
-  <img src="/images/9/before-attention.png" alt="Before the update, a question about why Transformers departed from recurrent models includes false distractors claiming recurrent models cannot use attention or gradient-based training.">
-  <figcaption>Before updating exam generation</figcaption>
-</figure>
+If you spot a bug or you'd like a new feature, let me know directly or open a GitHub issue. The project is open source and you can find it here: [virtual learning environment repository](https://github.com/noelcodesxo/virtual-learning-environment).
 
-<b>Explanation</b>
-
-In the screenshot, answer #3 is a wrong statement because recurrent models can 100% have the attention mechanism. Anyone who is familiar with recurrent models will immediately know that answer #3 is not correct, which makes it easier to pick the correct answer. Answer #4 is also a weak distractor because recurrent models can be trained with gradient-based methods.
-
-<figure>
-  <img src="/images/9/after-attention.png" alt="After the update, a long-sequence scenario asks how to avoid sequential hidden-state generation, with choices about removing recurrence or keeping it and reducing sequence length.">
-  <figcaption>After updating exam generation</figcaption>
-</figure>
-
-<b>Explanation</b>
-
-Even with the improvements, in this screenshot we see that the answer #3 is weak too, longer sequences and larger datasets generally require more memory.
-
----
-
-I will continue to work on this. My goal with this project is to make it a good application that can be used to help people learn fast. Active learning is a requirement if you want to learn effectively and I've learned that retrieval practice is one of the best ways you can study in order to help your brain create synapses (create/strengthen connections between neurons).
-
-## Outro and next steps
-
-The project is open source and it's already usable (I've been using it for my own learning). You can find it here: [virtual learning environment repository](https://github.com/noelcodesxo/virtual-learning-environment)
-
-I would love to get feedback. If you spot a bug or if you'd like a feature added, let me know directly, or open a GitHub issue.
-
-My next step is to continue to work on this. I want to try a couple of different models and edit the prompts until I'm happy with the quality of the MCQs. After that I most likely will work on Anki generation/integration.
+Thanks for reading. If you want to read the first blog of the series, it's [here](https://www.noelcodes.dev/blogs/building-a-rag-pipeline-for-my-own-virtual-learning-environment/).
