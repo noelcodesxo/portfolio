@@ -7,7 +7,7 @@ topics:
   - ai
   - engineering
   - learning
-isFeedback: true
+isFeedback: false
 feedbackThoughts: Are the exam examples clear about how Bloom's Taxonomy shapes the questions, and does the explanation of BM25 and the other project improvements make sense?
 ---
 
@@ -78,5 +78,7 @@ At the beginning of the blog, I talked about how my goal with this project is to
 I want to continue to improve the quality of exams generated, give the project a proper design (I may potentially work with an amazing friend who is a designer) and work on Anki generation/integration.
 
 If you spot a bug or you'd like a new feature, let me know directly or open a GitHub issue. The project is open source and you can find it here: [virtual learning environment repository](https://github.com/noelcodesxo/virtual-learning-environment).
+
+Thanks to Tiffany and Mike for giving me feedback on this blog. <3
 
 Thanks for reading. If you want to read the first blog of the series, it's [here](https://www.noelcodes.dev/blogs/building-a-rag-pipeline-for-my-own-virtual-learning-environment/).
