@@ -23,4 +23,104 @@
     <meta name="twitter:creator" content="{{ site.twitter }}">
 {% endblock %}
 
-{% block content %}<div class="content">{{ content | safe }}</div>{% endblock %}
+{% block content %}
+<div class="blog-layout">
+    <aside class="tree-nav" aria-label="Article table of contents" hidden>
+        <div class="tree-nav__inner">
+            <nav class="tree-nav__desktop" aria-label="Article sections">
+                <p class="tree-nav__label">Tree</p>
+                <ol class="tree-nav__list"></ol>
+            </nav>
+
+            <details class="tree-nav__mobile">
+                <summary>On this page</summary>
+                <ol class="tree-nav__list"></ol>
+            </details>
+        </div>
+    </aside>
+    <div class="content">{{ content | safe }}</div>
+</div>
+
+<script>
+    (() => {
+        const layout = document.querySelector('.blog-layout');
+        const navigation = layout?.querySelector('.tree-nav');
+        const article = layout?.querySelector('.content');
+        const lists = navigation ? [...navigation.querySelectorAll('.tree-nav__list')] : [];
+
+        if (!navigation || !article || !lists.length) return;
+
+        const headings = [...article.querySelectorAll('h2[id], h3[id]')]
+            .filter((heading) => heading.textContent.trim());
+
+        if (!headings.length) return;
+
+        const linksById = new Map();
+
+        const setCurrent = (id) => {
+            linksById.forEach((links, headingId) => {
+                links.forEach((link) => {
+                    const isCurrent = headingId === id;
+                    link.classList.toggle('is-current', isCurrent);
+                    link.toggleAttribute('aria-current', isCurrent);
+                });
+            });
+        };
+
+        const buildList = (list) => {
+            let currentSection;
+
+            headings.forEach((heading) => {
+                const item = document.createElement('li');
+                item.className = `tree-nav__item tree-nav__item--${heading.tagName.toLowerCase()}`;
+
+                const link = document.createElement('a');
+                link.href = `#${heading.id}`;
+                link.textContent = heading.textContent.trim();
+                link.addEventListener('click', () => setCurrent(heading.id));
+                item.append(link);
+
+                if (!linksById.has(heading.id)) linksById.set(heading.id, []);
+                linksById.get(heading.id).push(link);
+
+                if (heading.tagName === 'H2') {
+                    list.append(item);
+                    currentSection = item;
+                    return;
+                }
+
+                if (!currentSection) {
+                    list.append(item);
+                    return;
+                }
+
+                let sublist = currentSection.querySelector('.tree-nav__sublist');
+                if (!sublist) {
+                    sublist = document.createElement('ol');
+                    sublist.className = 'tree-nav__sublist';
+                    currentSection.append(sublist);
+                }
+                sublist.append(item);
+            });
+        };
+
+        lists.forEach(buildList);
+        navigation.hidden = false;
+
+        const updateCurrent = () => {
+            const readingLine = window.innerHeight * 0.38;
+            const passed = headings.filter((heading) => heading.getBoundingClientRect().top <= readingLine);
+            setCurrent((passed.at(-1) || headings[0]).id);
+        };
+
+        const observer = new IntersectionObserver(updateCurrent, {
+            rootMargin: '-20% 0px -55% 0px',
+            threshold: [0, 1],
+        });
+
+        headings.forEach((heading) => observer.observe(heading));
+        window.addEventListener('resize', updateCurrent, { passive: true });
+        updateCurrent();
+    })();
+</script>
+{% endblock %}
