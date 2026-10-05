@@ -56,6 +56,8 @@
         if (!headings.length) return;
 
         const linksById = new Map();
+        let pendingNavigationId;
+        let navigationSettleTimer;
 
         const setCurrent = (id) => {
             linksById.forEach((links, headingId) => {
@@ -77,7 +79,11 @@
                 const link = document.createElement('a');
                 link.href = `#${heading.id}`;
                 link.textContent = heading.textContent.trim();
-                link.addEventListener('click', () => setCurrent(heading.id));
+                link.addEventListener('click', () => {
+                    pendingNavigationId = heading.id;
+                    setCurrent(heading.id);
+                    scheduleNavigationSettle();
+                });
                 item.append(link);
 
                 if (!linksById.has(heading.id)) linksById.set(heading.id, []);
@@ -108,9 +114,22 @@
         navigation.hidden = false;
 
         const updateCurrent = () => {
+            if (pendingNavigationId) return;
+
             const readingLine = window.innerHeight * 0.38;
             const passed = headings.filter((heading) => heading.getBoundingClientRect().top <= readingLine);
             setCurrent((passed.at(-1) || headings[0]).id);
+        };
+
+        const settleNavigation = () => {
+            pendingNavigationId = undefined;
+            navigationSettleTimer = undefined;
+            updateCurrent();
+        };
+
+        const scheduleNavigationSettle = () => {
+            window.clearTimeout(navigationSettleTimer);
+            navigationSettleTimer = window.setTimeout(settleNavigation, 180);
         };
 
         const observer = new IntersectionObserver(updateCurrent, {
@@ -120,6 +139,9 @@
 
         headings.forEach((heading) => observer.observe(heading));
         window.addEventListener('resize', updateCurrent, { passive: true });
+        window.addEventListener('scroll', () => {
+            if (pendingNavigationId) scheduleNavigationSettle();
+        }, { passive: true });
         updateCurrent();
     })();
 </script>
